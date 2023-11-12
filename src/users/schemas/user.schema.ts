@@ -16,6 +16,18 @@ export class User {
 
   @Prop()
   country: string;
+
+  @Prop({ default: false })
+  isAdmin: boolean;
+
+  @Prop({ default: false })
+  ban: boolean;
+
+  @Prop({ default: 0 })
+  limit: number;
+
+  @Prop()
+  banDate: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -8,9 +8,10 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, MongoIdDto } from './dtos';
+import { CreateUserDto, MongoIdDto, PaginationDto } from './dtos';
 import { ParseMongoIdPipe } from 'src/mongo/pipes';
 
 @Controller('users')
@@ -31,5 +32,16 @@ export class UserController {
     if (!user) throw new NotFoundException();
 
     return user;
+  }
+
+  @Get()
+  async getUsers(
+    @Query() paginationDto: PaginationDto,
+    @Query('keyword') keyword: string,
+  ) {
+    const users = await this.userService.getUsers(paginationDto, keyword);
+    if (!users) throw new NotFoundException();
+
+    return users;
   }
 }
