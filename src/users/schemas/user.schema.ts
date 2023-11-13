@@ -27,7 +27,7 @@ export class User {
   limit: number;
 
   @Prop()
-  banDate: Date;
+  banDate: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
