@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { compareSync, hashSync } from 'bcrypt';
@@ -36,7 +40,7 @@ export class AuthService {
     return await this.accessToken(user);
   }
 
-  async login(loginDto: LoginDto): Promise<string> {
+  async login(loginDto: LoginDto) /*: Promise<string>*/ {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email });
@@ -47,7 +51,8 @@ export class AuthService {
       user.ban = false;
       user.banDate = undefined;
       await user.save();
-      return await this.accessToken(user);
+      // return await this.accessToken(user);
+      return user;
     }
   }
 
@@ -65,29 +70,29 @@ export class AuthService {
   private async handleInvalidPassword(user: any): Promise<void> {
     console.log(user);
     if (!user) {
-      throw new BadRequestException('Invalid emial or password');
+      throw new UnauthorizedException('Invalid emial or password');
     }
 
     if (user.ban === false) {
       if (user.limit < 3) {
         user.limit += 1;
         await user.save();
-        throw new BadRequestException('Invalid email or password');
+        throw new UnauthorizedException('Invalid email or password');
       } else {
         user.limit = 0;
         user.banDate = Date.now() + 1000 * 60 * 60 * 24;
         user.ban = true;
         await user.save();
-        throw new BadRequestException('This person has been blocked');
+        throw new UnauthorizedException('This person has been blocked');
       }
     } else {
       if (user.banDate > Date.now()) {
-        throw new BadRequestException('This person has been blocked');
+        throw new UnauthorizedException('This person has been blocked');
       } else {
         user.banDate = undefined;
         user.ban = false;
         await user.save();
-        throw new BadRequestException('Invalid email or password');
+        throw new UnauthorizedException('Invalid email or password');
       }
     }
   }

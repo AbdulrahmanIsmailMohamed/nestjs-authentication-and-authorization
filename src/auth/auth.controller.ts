@@ -5,10 +5,13 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dtos';
 import { LoginDto } from './dtos';
+import { LocalAuthGuard } from './guards';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +26,14 @@ export class AuthController {
     if (!user) throw new BadRequestException();
 
     return user;
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('/users')
+  async getMe(@Request() req) {
+    console.log(req.user, 'authenticated user');
+
+    return req.user;
   }
 
   @HttpCode(HttpStatus.OK)
