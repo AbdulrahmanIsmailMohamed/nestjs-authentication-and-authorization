@@ -40,7 +40,7 @@ export class AuthService {
     return await this.accessToken(user);
   }
 
-  async login(loginDto: LoginDto) /*: Promise<string>*/ {
+  async login(loginDto: LoginDto): Promise<string> {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email });
@@ -51,8 +51,7 @@ export class AuthService {
       user.ban = false;
       user.banDate = undefined;
       await user.save();
-      // return await this.accessToken(user);
-      return user;
+      return await this.accessToken(user);
     }
   }
 
@@ -60,7 +59,7 @@ export class AuthService {
     const { _id, username } = user;
 
     const token = this.jwtService.signAsync({
-      _id,
+      id: _id,
       username,
     });
 

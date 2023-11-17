@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dtos';
 import { LoginDto } from './dtos';
-import { LocalAuthGuard } from './guards';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -19,20 +19,15 @@ export class AuthController {
 
   @Post('/register')
   async register(@Body() createUserDto: CreateUserDto): Promise<string> {
-    console.log(createUserDto);
-
     const user = await this.authService.register(createUserDto);
-    console.log(createUserDto);
     if (!user) throw new BadRequestException();
 
     return user;
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Post('/users')
+  @UseGuards(JwtAuthGuard)
+  @Post('/me')
   async getMe(@Request() req) {
-    console.log(req.user, 'authenticated user');
-
     return req.user;
   }
 
