@@ -21,7 +21,9 @@ export class UserService {
    * @access User
    */
   async getUser(userId: MongoIdDto): Promise<User> {
-    const user = await this.userModle.findById(userId);
+    const user = await this.userModle
+      .findById(userId)
+      .select('_id username email country');
     if (!user) {
       throw new NotFoundException(`${userId} not found`);
     }

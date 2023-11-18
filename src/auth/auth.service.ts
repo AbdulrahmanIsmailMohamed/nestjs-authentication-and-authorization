@@ -8,8 +8,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { compareSync, hashSync } from 'bcrypt';
 import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/users/dtos';
-import { User } from 'src/users/schemas/user.schema';
-import { LoginDto } from './dtos/login.dto';
+import { User } from 'src/users/schemas';
+import { LoginDto } from './dtos';
 
 @Injectable()
 export class AuthService {
@@ -51,23 +51,24 @@ export class AuthService {
       user.ban = false;
       user.banDate = undefined;
       await user.save();
+
       return await this.accessToken(user);
     }
   }
 
   private accessToken(user: any): Promise<string> {
-    const { _id, username } = user;
+    const { _id, username, roles } = user;
 
     const token = this.jwtService.signAsync({
       id: _id,
       username,
+      roles,
     });
 
     return token;
   }
 
   private async handleInvalidPassword(user: any): Promise<void> {
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException('Invalid emial or password');
     }

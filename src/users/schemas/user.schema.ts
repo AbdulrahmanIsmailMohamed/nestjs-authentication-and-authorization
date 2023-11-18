@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import Role from 'src/common/enums/roles.enum';
 
-export type CatDocument = HydratedDocument<User>;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
@@ -17,8 +18,8 @@ export class User {
   @Prop()
   country: string;
 
-  @Prop({ default: false })
-  isAdmin: boolean;
+  @Prop({ default: Role.USER })
+  roles: Role;
 
   @Prop({ default: false })
   ban: boolean;
