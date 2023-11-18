@@ -1,10 +1,10 @@
 {
-  "name": "nestjs-i18n-example",
+  "name": "nestjs-authentication-and-authorization",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "NestJS authentication and authorization using Bcrypt,Passport , JWT & MongoDB",
+  "author": "Abdulrahman Ismail",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
